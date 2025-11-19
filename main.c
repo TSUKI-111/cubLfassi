@@ -37,7 +37,8 @@ void    initialize(t_data *data)
 
 int main(int ac, char **av)
 {
-    (void) ac;
+    if(ac != 2)
+        error("invalid args");
     t_data data;
     initialize(&data);
     parsing(av, &data);

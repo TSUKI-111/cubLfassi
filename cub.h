@@ -21,11 +21,11 @@ typedef struct s_data
 int is_whitespaces(char *str);
 char    *skip_Spaces(char *str);
 
-
 // LIBFT
 int	ft_strncmp(const char *str1, const char *str2, size_t n);
 int	ft_isdigit(int c);
 char	**ft_split(char const *s, char c);
+int	ft_atoi(const char *str);
 //parsing
 char    *get_path(char *str);
 int check_filename(char *filename);

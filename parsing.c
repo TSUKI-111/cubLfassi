@@ -38,6 +38,9 @@ int    floor_ceiling(char *line)
 {
     char **tmp;
     int i;
+    int r;
+    int g;
+    int b;
     int j;
 
     line++;
@@ -52,9 +55,6 @@ int    floor_ceiling(char *line)
         {
             if(!ft_isdigit(tmp[i][j]))          //FREE
             {
-                if(tmp[i][j] == '\n')
-                    continue;
-                printf("%d  %d   %d*\n", tmp[i][j], i , j);
                 return 1;
             }
             j++;
@@ -71,6 +71,12 @@ int    floor_ceiling(char *line)
         printf("*****\n");
         return 1;
     }
+    r = ft_atoi(tmp[0]);
+    g = ft_atoi(tmp[1]);
+    b = ft_atoi(tmp[2]);
+    if(r > 250 || g > 250 || b > 250)
+        return 1;
+    //function to convert rgb and store it
     
         // FREE TMP;
     return(0);
@@ -131,42 +137,8 @@ int        check_compo(char *filename,t_data *data)
     return 0;
     
 }
-// int parse_map(t_data *data)
-// {
 
 
-// }
-
-void allocate_map(t_data *data, char *filename)
-{
-    char *line;
-    int fd;
-    int i;
-
-    i = 0;
-    fd = open(filename, O_RDONLY);
-    if(fd == -1)
-    {
-        printf("ERROR/open");
-        exit(1);
-    }
-    data->map = malloc(data->count * sizeof(char *));
-    line = get_next_line(fd);
-    while(line)
-    {
-        if(is_map(line))
-        {
-            data->map[i] = ft_strdup(line);
-            i++;
-        }
-        free(line);
-        line = get_next_line(fd);
-    }
-    if(!line)
-        free(line);
-    close(fd);
-    data->map[i] = 0;
-}
 void parsing(char **av, t_data *data)
 {
     if(check_filename(av[1]))
@@ -174,5 +146,5 @@ void parsing(char **av, t_data *data)
     if(check_compo(av[1], data))
         error("invalid path or componant");
     allocate_map(data, av[1]);
-    //parse_map(data);
+    parse_map(data);
 }
