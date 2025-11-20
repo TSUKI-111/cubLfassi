@@ -1,4 +1,5 @@
 #include "cub.h"
+
 char    *skip_Spaces(char *str)
 {
     while (str)
@@ -31,6 +32,7 @@ void    initialize(t_data *data)
     data->SO_path= NULL;
     data->WE_path= NULL;
     data->count = 0;
+    data->player_dir  = 0;
 }
 
 

@@ -24,7 +24,7 @@ int is_surrounded_by_walls(t_data *data)
     while (map[i])
     {
         if(map[i][0] != '1' || map[i][ft_strlen(map[i]) - 1] != '1')
-        return 1;
+            return 1;
         i++;
     }
     return 0;
@@ -61,10 +61,45 @@ void allocate_map(t_data *data, char *filename)
     data->map[i] = 0;
 }
 
+int map_elements(t_data *data)
+{
+    int i;
+    int j;
+
+    i = 0;
+    while(data->map[i])
+    {
+        j = 0;
+        while(data->map[i][j])
+        {
+            if(ft_strchr("10NSEW",data->map[i][j]))
+            {
+                if(ft_strchr("NSEW", data->map[i][j]) && !data->player_dir)
+                {
+                    data->player_dir = data->map[i][j];
+                    data->player_x = i;
+                    data->player_y = j;
+                }
+                else
+                    return 1;
+
+            }
+            else
+                return 1;
+            j++;
+
+        }
+        i++;
+    }
+    return 0;
+}
+
 void parse_map(t_data *data)
 {
     if(is_surrounded_by_walls(data))
         error("not surrounded by wall");
+    if(map_elements(data))
+        error("invalid map elements");
     
     
 }

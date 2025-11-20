@@ -1,5 +1,5 @@
 SRC = main.c gnl/get_next_line_utils.c gnl/get_next_line.c ft_strncmp.c parsing.c ft_isdigit.c ft_split.c\
-	  ft_atoi.c
+	  ft_atoi.c map_parsing.c
 OBJ = $(SRC: .c=.o)
 HDRS = cub.h
 NAME = cub
