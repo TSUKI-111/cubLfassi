@@ -24,6 +24,8 @@ typedef struct s_data
 //utils
 int is_whitespaces(char *str);
 char    *skip_Spaces(char *str);
+int is_space(char c);
+
 
 // LIBFT
 int	ft_strncmp(const char *str1, const char *str2, size_t n);
@@ -32,7 +34,7 @@ char	**ft_split(char const *s, char c);
 int	ft_atoi(const char *str);
 //parsing
 void    error(char *message);
-int parse_spaces(char **map, int i, int j);
+int parse_spaces(char **map, int i, int j, int count, int width);
 void parse_map(t_data *data);
 char    *get_path(char *str);
 int check_filename(char *filename);

@@ -61,14 +61,12 @@ int    floor_ceiling(char *line)
         }
         if(j > 3 )
         {
-            printf("aaaaaaaaa/n");
             return 1;
         }
         i++;
     }
     if(i != 3)
     {
-        printf("*****\n");
         return 1;
     }
     r = ft_atoi(tmp[0]);
@@ -87,34 +85,35 @@ int        check_compo(char *filename,t_data *data)
 {
     int fd;
     char *line;
-
+    char *str;
     fd = open(filename, O_RDONLY);
     if(fd == -1)
         error("OPEN FAILED");
     line = get_next_line(fd);
     while (line)
     {
-        if(!ft_strncmp(line, "NO ", 3))
+        str = skip_Spaces(line);
+        if(!ft_strncmp(str, "NO ", 3))
         {
             data->NO_path = get_path(line);
         }
-        else if(!ft_strncmp(line, "SO ", 3))
+        else if(!ft_strncmp(str, "SO ", 3))
         {
             data->SO_path = get_path(line);
         }
-        else if(!ft_strncmp(line, "WE ", 3))
+        else if(!ft_strncmp(str, "WE ", 3))
         {
             data->WE_path = get_path(line);
         }
-        else if(!ft_strncmp(line, "EA ", 3))
+        else if(!ft_strncmp(str, "EA ", 3))
         {
             data->EA_path = get_path(line);
         }
-        else if(is_map(line))
+        else if(is_map(str))
             data->count++;
-        else if(*line == 'F' || *line == 'C')
+        else if(*str == 'F' || *str == 'C')
         {
-            if(floor_ceiling(line))
+            if(floor_ceiling(str))
                 error("invalid F identifier");
         }
         else if(!is_whitespaces(line))
@@ -134,6 +133,7 @@ int        check_compo(char *filename,t_data *data)
     close(fd);
     if(!data->EA_path || !data->SO_path || !data->NO_path || !data->WE_path)
         return 1;
+    
     return 0;
     
 }
@@ -141,6 +141,7 @@ int        check_compo(char *filename,t_data *data)
 
 void parsing(char **av, t_data *data)
 {
+    
     if(check_filename(av[1]))
         error("invalid filename");
     if(check_compo(av[1], data))

@@ -6,18 +6,19 @@ int is_surrounded_by_walls(t_data *data)
     int j;
     char **map = data->map;
 
+
     i = 1;
     j = 0;
     while(map[0][j])
     {
-        if(map[0][j] != '1')
+        if(map[0][j] != '1' && !is_space(map[0][j]))
             return 1;
         j++;
     }
     j=0;
     while(map[data->count - 1][j])
     {
-        if(map[data->count - 1][j] != '1')
+        if(map[data->count - 1][j] != '1'&& !is_space(map[data->count - 1][j]))
             return 1;
         j++;
     }
@@ -72,19 +73,18 @@ int map_elements(t_data *data)
         j = 0;
         while(data->map[i][j])
         {
-            if(ft_strchr("10NSEW",data->map[i][j]))
+            if(ft_strchr("10NSEW",data->map[i][j]) || is_space(data->map[i][j]))
             {
-                if(ft_strchr("NSEW", data->map[i][j]) && !data->player_dir)
+                if(ft_strchr("NSEW", data->map[i][j]))
                 {
+                    if(data->player_dir)
+                        return 1;
                     data->player_dir = data->map[i][j];
                     data->player_x = i;
                     data->player_y = j;
-                }
-                else
-                    return 1;
-
+                }   
             }
-            else
+            else if (data->map[i][j])
                 return 1;
             j++;
 
@@ -94,28 +94,71 @@ int map_elements(t_data *data)
     return 0;
 }
 
+int valid_spaces(t_data *data)
+{
+    int i;
+    int w;
+    int j;
+
+    i = 0;
+    w = 0;
+    while(data->map[i])
+    {
+        if((int)ft_strlen(data->map[i]) > w)
+            w = ft_strlen(data->map[i]);
+        i++;
+    }
+    i = 0;
+
+    while(data->map[i])
+    {
+        j =0;
+        while(data->map[i][j])
+        {
+            if(is_space(data->map[i][j]))
+            {
+                if(!parse_spaces(data->map, i, i, data->count, w))
+                {
+                    printf("%c %d, %d\n", data->map[i][j], i, j);
+                    return 1;
+                }
+            }
+            j++;
+        }
+        i++;
+    }
+    return 0;
+}                                               
+
+int parse_spaces(char **map, int i, int j, int count, int width)
+{
+    if(i < 0 || j < 0  || i >= count || j >=width)
+        return 1;
+    if(map[i][j] == '1')
+        return 1;
+    if(!is_space(map[i][j]))
+        return 0;
+
+        
+    if(!parse_spaces(map, i + 1, j,count,width))
+     return 0;
+    if(!parse_spaces(map, i - 1, j,count,width))
+     return 0;
+    if(!parse_spaces(map, i, j + 1,count,width))
+     return 0;
+    if(!parse_spaces(map, i, j - 1,count,width))
+     return 0;
+
+    return(1);
+}
 void parse_map(t_data *data)
 {
+    // if(valid_spaces(data))
+    //     error("invalid spaces");
     if(is_surrounded_by_walls(data))
         error("not surrounded by wall");
     if(map_elements(data))
         error("invalid map elements");
     
     
-}
-int parse_spaces(char **map, int i, int j)
-{
-    if(map[i][j] == '1')
-        return 0;
-    if(!(map[i][j]>= 9 && map[i][j]<= 13) && map[i][j] != 32)
-        return 1;
-    if(parse_spaces(map, i - 1, j))
-        return 1;
-    if(parse_spaces(map, i + 1, j))
-        return 1;
-    if(parse_spaces(map, i, j - 1))
-        return 1;
-    if(parse_spaces(map, i, j + 1))
-        return 1;
-    return(0);
 }

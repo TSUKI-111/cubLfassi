@@ -10,6 +10,14 @@ char    *skip_Spaces(char *str)
     }
     return(str);
 }
+
+int is_space(char c)
+{
+    if((c >= 9 && c <= 13) || c == 32)
+        return 1;
+    return 0;
+}
+
 int is_whitespaces(char *str)
 {
     int i;
