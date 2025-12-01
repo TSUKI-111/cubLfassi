@@ -34,14 +34,14 @@ char	**ft_split(char const *s, char c);
 int	ft_atoi(const char *str);
 //parsing
 void    error(char *message);
-int parse_spaces(char **map, int i, int j, int count, int width);
+int parse_spaces(char **map,int i,int j, int count, char d);
 void parse_map(t_data *data);
 char    *get_path(char *str);
 int check_filename(char *filename);
 int is_map(char *line);
 void    initialize(t_data *data);
 int is_whitespaces(char *str);
-int        check_compo(char *filename,t_data *data);
+int        check_map_file(char *filename,t_data *data);
 void allocate_map(t_data *data, char *filename);
 void parsing(char **av, t_data *data);
 #endif

@@ -24,7 +24,7 @@ int is_surrounded_by_walls(t_data *data)
     }
     while (map[i])
     {
-        if(map[i][0] != '1' || map[i][ft_strlen(map[i]) - 1] != '1')
+        if((map[i][0] != '1' && !is_space(map[i][0])) || (map[i][ft_strlen(map[i]) - 1] != '1' && !is_space(map[i][ft_strlen(map[i]) - 1])))
             return 1;
         i++;
     }
@@ -115,11 +115,11 @@ int valid_spaces(t_data *data)
         j =0;
         while(data->map[i][j])
         {
-            if(is_space(data->map[i][j]))
+            if(data->map[i][j] == '0')
             {
-                if(!parse_spaces(data->map, i, i, data->count, w))
+                if(!parse_spaces(data->map,i,j,data->count, data->player_dir))
                 {
-                    printf("%c %d, %d\n", data->map[i][j], i, j);
+                    printf("%c ,%d, %d\n",data->map[i][j], i, j);
                     return 1;
                 }
             }
@@ -130,35 +130,43 @@ int valid_spaces(t_data *data)
     return 0;
 }                                               
 
-int parse_spaces(char **map, int i, int j, int count, int width)
+int parse_spaces(char **map, int i,int j, int count, char d)
 {
-    if(i < 0 || j < 0  || i >= count || j >=width)
-        return 1;
-    if(map[i][j] == '1')
-        return 1;
-    if(!is_space(map[i][j]))
+    if(i < 0 || i >= count)
+        return 0;
+    if(j < 0 || j>= (int)ft_strlen(map[i]))
         return 0;
 
-        
-    if(!parse_spaces(map, i + 1, j,count,width))
-     return 0;
-    if(!parse_spaces(map, i - 1, j,count,width))
-     return 0;
-    if(!parse_spaces(map, i, j + 1,count,width))
-     return 0;
-    if(!parse_spaces(map, i, j - 1,count,width))
-     return 0;
+    if(map[i][j] == '1' ||map[i][j] == 'o'|| map[i][j] == d)
+        return 1;
+    
+    
+    if(map[i][j] !='0')
+        return 0;
+     map[i][j] = 'o';
+    if(!parse_spaces(map,i+1, j,count,d))
+        return 0;
+    if(!parse_spaces(map,i, j-1,count, d))
+        return 0;
+    if(!parse_spaces(map,i-1, j,count, d))
+        return 0;
+    if(!parse_spaces(map,i, j+1,count, d))
+        return 0;
+    return 1;
 
-    return(1);
+
 }
+
 void parse_map(t_data *data)
 {
-    // if(valid_spaces(data))
-    //     error("invalid spaces");
-    if(is_surrounded_by_walls(data))
-        error("not surrounded by wall");
+
+
     if(map_elements(data))
         error("invalid map elements");
+    if(valid_spaces(data))
+        error("invalid spaces");
+    if(is_surrounded_by_walls(data))
+        error("not surrounded by wall");
     
     
 }

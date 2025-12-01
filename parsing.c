@@ -7,8 +7,9 @@ void    error(char *message)
 }
 int is_map(char *line)
 {
-    skip_Spaces(line);
-    if(ft_isdigit(*line))
+    char *str;
+    str = skip_Spaces(line);
+    if(ft_isdigit(*str))
         return 1;
     return 0;
 }
@@ -54,7 +55,7 @@ int    floor_ceiling(char *line)
         while(tmp[i][j])
         {
             if(!ft_isdigit(tmp[i][j]))          //FREE
-            {
+            {   
                 return 1;
             }
             j++;
@@ -79,9 +80,42 @@ int    floor_ceiling(char *line)
         // FREE TMP;
     return(0);
 }
+int is_identifier(char *str)
+{
+    if(!ft_strncmp(str, "NO ", 3) || !ft_strncmp(str, "SO ", 3) || !ft_strncmp(str, "WE ", 3) || !ft_strncmp(str, "EA ", 3))
+        return 1;
+    return 0;
+}
 
-
-int        check_compo(char *filename,t_data *data)
+int parse_identif(char *str, t_data *data)
+{
+    if(!ft_strncmp(str, "NO ", 3))
+    {
+        if(data->NO_path)
+            return 0;
+        data->NO_path = get_path(str);
+    }
+    else if(!ft_strncmp(str, "SO ", 3))
+    {
+        if(data->SO_path)
+            return 0;
+        data->SO_path = get_path(str);
+    }
+    else if(!ft_strncmp(str, "WE ", 3))
+    {
+        if(data->WE_path)
+            return 0;
+        data->WE_path = get_path(str);
+    }
+    else if(!ft_strncmp(str, "EA ", 3))
+    {
+        if(data->EA_path)
+            return 0;
+        data->EA_path = get_path(str);
+    }
+    return 1;
+}
+int        check_map_file(char *filename,t_data *data)
 {
     int fd;
     char *line;
@@ -93,21 +127,10 @@ int        check_compo(char *filename,t_data *data)
     while (line)
     {
         str = skip_Spaces(line);
-        if(!ft_strncmp(str, "NO ", 3))
+        if(is_identifier(str))
         {
-            data->NO_path = get_path(line);
-        }
-        else if(!ft_strncmp(str, "SO ", 3))
-        {
-            data->SO_path = get_path(line);
-        }
-        else if(!ft_strncmp(str, "WE ", 3))
-        {
-            data->WE_path = get_path(line);
-        }
-        else if(!ft_strncmp(str, "EA ", 3))
-        {
-            data->EA_path = get_path(line);
+            if(!parse_identif(str,data))
+                error("too many identifiers");
         }
         else if(is_map(str))
             data->count++;
@@ -144,8 +167,9 @@ void parsing(char **av, t_data *data)
     
     if(check_filename(av[1]))
         error("invalid filename");
-    if(check_compo(av[1], data))
+    if(check_map_file(av[1], data))
         error("invalid path or componant");
     allocate_map(data, av[1]);
     parse_map(data);
+    printf("VALID MAP\n");
 }
